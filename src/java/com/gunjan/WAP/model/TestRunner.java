@@ -61,6 +61,7 @@ public class TestRunner {
                     if (quiz.getNumCorrect() == quiz.getNumQuestions()) {
                         questionsLeft = false;
                         System.out.println("Congratulations, you have completed the quiz!");
+                        
                     }
                 }
         }

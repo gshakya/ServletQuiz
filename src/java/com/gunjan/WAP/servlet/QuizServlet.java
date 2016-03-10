@@ -86,24 +86,28 @@ public class QuizServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         HttpSession session = request.getSession();
+        if (request.getParameter("btnNext") != null) {
 
-        Quiz quizObj = (Quiz) session.getAttribute("quizObj");
+            Quiz quizObj = (Quiz) session.getAttribute("quizObj");
 
-        String answer = request.getParameter("txtAnswer");
+            String answer = request.getParameter("txtAnswer");
 
-        boolean error = true;
-        /* i.e., if answer is correct then increment the question index and score */
-        if ((answer != null) && quizObj.isCorrect(answer)) {
-            error = false;
-            quizObj.scoreAnswer();
-        }
+            boolean error = true;
+            /* i.e., if answer is correct then increment the question index and score */
+            if ((answer != null) && quizObj.isCorrect(answer)) {
+                error = false;
+                quizObj.scoreAnswer();
+            }
 
-        if (quizObj.getNumCorrect() == quizObj.getNumQuestions()) {
-            genQuizOverPage(out);
-        } else {
-            session.setAttribute("quizObj", quizObj);
+            if (quizObj.getNumCorrect() == quizObj.getNumQuestions()) {
+                genQuizOverPage(out);
+            } else {
+                session.setAttribute("quizObj", quizObj);
 
-            genQuizPage(quizObj, out, quizObj.getCurrentQuestion(), error, "");
+                genQuizPage(quizObj, out, quizObj.getCurrentQuestion(), error, "");
+            }
+        } else if (request.getParameter("btnReset") != null) {
+            response.sendRedirect("/ServletQuiz");
         }
     }
 
@@ -138,6 +142,7 @@ public class QuizServlet extends HttpServlet {
             out.print("<p style='color:red'>Your last answer was not correct! Please try again</p> ");
         }
         out.print("<p><input type='submit' name='btnNext' value='Next' /></p> ");
+        out.print("<p><input type='submit' name='btnReset' value='Reset' /></p> ");
 
         out.print("</form>");
         out.print("</body></html>");
@@ -150,6 +155,9 @@ public class QuizServlet extends HttpServlet {
         out.print("</head> ");
         out.print("<body> ");
         out.print("<p style='color:red'>The number quiz is over! You are Einstein now.</p>	</body> ");
+        out.print("	<form method='post'>");
+        out.print("<p><input type='submit' name='btnReset' value='Reset' /></p> ");
+        out.print("	</form>");
         out.print("</html> ");
     }
 
